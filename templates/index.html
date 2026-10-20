@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block contenu %}
+<h1>Ma médiathèque</h1>
+<p class="lead">Choisissez une étagère pour gérer vos livres, vos CD ou vos DVD.</p>
+<div class="shelf">
+<a class="spine livres" href="{{ url_for('liste', type_='livres') }}"><h2>Livres</h2><p>Titres, auteurs, éditeurs et état de lecture.</p></a>
+<a class="spine cds" href="{{ url_for('liste', type_='cds') }}"><h2>CD</h2><p>Albums, artistes, labels et genres.</p></a>
+<a class="spine dvds" href="{{ url_for('liste', type_='dvds') }}"><h2>DVD</h2><p>Films, réalisateurs, durées et visionnages.</p></a>
+</div>
+{% endblock %}

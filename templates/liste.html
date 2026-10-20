@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block titre %}{{ t.nom }}{% endblock %}
+{% block contenu %}
+<h1>{{ t.page }}</h1>
+<p class="lead">Ajoutez, retrouvez et mettez à jour votre collection.</p>
+<div class="workspace">
+<section class="card" aria-labelledby="add">
+<h2 id="add">{% if element %}Modifier {{ t.un }}{% else %}Ajouter {{ t.un }}{% endif %}</h2>
+<form method="post" action="{% if element %}{{ url_for('modifier', type_=type_, id=element.id) }}{% else %}{{ url_for('ajouter', type_=type_) }}{% endif %}">
+<div class="fields">
+{% for c in t.champs %}
+{% set val = (element|attr(c.nom)) if element else none %}
+<div{% if c.plein %} class="full"{% endif %}>
+<label for="{{ c.nom }}">{{ c.label }}</label>
+{% if c.type == 'textarea' %}<textarea id="{{ c.nom }}" name="{{ c.nom }}" rows="3">{{ val or '' }}</textarea>
+{% elif c.type == 'select' %}<select id="{{ c.nom }}" name="{{ c.nom }}">{% for o in c.options %}<option{% if val == o %} selected{% endif %}>{{ o }}</option>{% endfor %}</select>
+{% else %}<input id="{{ c.nom }}" name="{{ c.nom }}" type="{{ c.type }}" value="{{ val if val is not none else '' }}"{% if c.nom == 'titre' %} required{% endif %}>
+{% endif %}
+</div>
+{% endfor %}
+</div>
+<div class="actions">
+<button class="btn" type="submit">Enregistrer</button>
+{% if element %}<a class="btn ghost" href="{{ url_for('liste', type_=type_) }}">Annuler</a>{% else %}<button class="btn ghost" type="reset">Effacer</button>{% endif %}
+</div>
+</form>
+</section>
+<section class="card" aria-labelledby="list">
+<div class="toolbar"><h2 id="list">Ma collection</h2>
+<form method="get" action="{{ url_for('liste', type_=type_) }}"><input type="search" name="q" value="{{ q }}" aria-label="Rechercher" placeholder="Rechercher…"></form></div>
+<div class="scroll"><table><thead><tr>
+{% for nom, label in t.colonnes %}<th scope="col">{{ label }}</th>{% endfor %}
+<th scope="col"><span class="sr">Actions</span></th></tr></thead>
+<tbody>
+{% for item in elements %}
+<tr>
+{% for nom, label in t.colonnes %}<td{% if loop.first %} class="title"{% endif %}>{{ (item|attr(nom)) if (item|attr(nom)) is not none else '' }}</td>{% endfor %}
+<td class="row-actions"><a class="btn small ghost" href="{{ url_for('modifier', type_=type_, id=item.id) }}">Modifier</a>
+<form method="post" action="{{ url_for('supprimer', type_=type_, id=item.id) }}" onsubmit="return confirm('Supprimer cet élément ?')"><button class="btn small danger" type="submit">Supprimer</button></form></td>
+</tr>
+{% else %}
+<tr><td class="vide" colspan="{{ t.colonnes|length + 1 }}">{% if q %}Aucun résultat pour « {{ q }} ».{% else %}Rien pour l’instant. Utilisez le formulaire pour ajouter {{ t.un }}.{% endif %}</td></tr>
+{% endfor %}
+</tbody></table></div>
+</section></div>
+{% endblock %}
