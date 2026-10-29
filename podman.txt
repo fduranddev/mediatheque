@@ -10,4 +10,3 @@ podman run -d `
 podman exec -it postgres16-lab psql -U postgres -c "ALTER USER postgres WITH PASSWORD 'postgres';"
 
 
-mots cl&s
