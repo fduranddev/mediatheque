@@ -370,13 +370,14 @@ code {
 <h2 id="1-lidée-générale">1. L'idée générale</h2>
 <p>L'application repose sur un principe simple : <strong>chaque fichier a un seul métier</strong>.</p>
 <ul>
-<li><code>models.py</code> décrit les <strong>données</strong> (les tables de la base).</li>
-<li><code>app.py</code> est le <strong>chef d'orchestre</strong> : il reçoit les requêtes du navigateur, lit ou écrit dans la base, puis choisit la page à afficher.</li>
-<li><code>templates/</code> contient le <strong>HTML</strong> (avec des trous que Flask remplit).</li>
-<li><code>static/css/style.css</code> contient l'<strong>apparence</strong>.</li>
-<li><code>instance/mediatheque.db</code> contient les <strong>données réelles</strong> (le fichier SQLite).</li>
+<li><span style="color: royalblue;">models.py</span> décrit les <strong>données</strong> (les tables de la base).</li>
+<li><span style="color: royalblue;">app.py</span> est le <strong>chef d'orchestre</strong> : il reçoit les requêtes du navigateur, lit ou écrit dans la base, puis choisit la page à afficher.</li>
+<li><span style="color: royalblue;">template/</span> contient le <strong>HTML</strong> (avec des trous que Flask remplit).</li>
+<li><span style="color: royalblue;">static/css/style.css</span> contient l'<strong>apparence</strong>.</li>
+<li><span style="color: royalblue;">instance/mediatheque.db</span> contient les <strong>données réelles</strong> (le fichier SQLite).</li>
 </ul>
-<p>Quand tu cliques sur un lien, le navigateur envoie une URL à <code>app.py</code>. Celui-ci interroge la base grâce aux classes de <code>models.py</code>, injecte le résultat dans un template, et renvoie une page HTML qui va elle-même chercher le fichier CSS.</p>
+<p>Quand tu cliques sur un lien, le navigateur envoie une URL à <span style="color: royalblue;">app.py</span>. Celui-ci interroge la base grâce aux classes de
+<span style="color: royalblue;">models.py</span>, injecte le résultat dans un template, et renvoie une page HTML qui va elle-même chercher le fichier CSS.</p>
 <hr>
 <h2 id="2-larborescence--qui-fait-quoi">2. L'arborescence : qui fait quoi</h2>
 <pre class="hljs"><code><div>mediatheque/
@@ -450,7 +451,7 @@ code {
 <ul>
 <li><code>.venv/</code> (environnement virtuel), <code>__pycache__/</code> (cache Python) et <code>.git/</code> (historique Git) : générés automatiquement.</li>
 <li><code>me</code> : un fichier vide, sans doute créé par accident.</li>
-<li><code>podman run -d ``.txt</code> : des notes (OpenSearch, PostgreSQL) sans rapport avec la médiathèque.</li>
+<li><code>podman.txt</code> : note (PostgreSQL) sans rapport avec la médiathèque.</li>
 </ul>
 <hr>
 <h2 id="3-le-trajet-dune-requête-de-bout-en-bout">3. Le trajet d'une requête, de bout en bout</h2>
@@ -466,7 +467,7 @@ code {
 </ol>
 <p>Retiens cette chaîne : <strong>URL → route (app.py) → modèle (models.py) → base → template → CSS</strong>.</p>
 <hr>
-<h2 id="4-modelspy--les-données">4. <code>models.py</code> : les données</h2>
+<h2 id="4-modelspy--les-données">4. <span style="color: dodgerblue;">models.py</span> : les données</h2>
 <pre class="hljs"><code><div><span class="hljs-keyword">from</span> flask_sqlalchemy <span class="hljs-keyword">import</span> SQLAlchemy
 
 db = SQLAlchemy()
@@ -484,7 +485,7 @@ db = SQLAlchemy()
 <p><strong>Pourquoi ce fichier est séparé de <code>app.py</code> ?</strong> <code>app.py</code> importe <code>models.py</code>, mais <code>models.py</code> n'importe jamais <code>app.py</code>. Cela évite un « import circulaire » et garde les données indépendantes du reste.</p>
 <p><strong>Le pacte entre les fichiers :</strong> les trois classes ont toutes une colonne <code>titre</code>. C'est ce qui permet à la fonction <code>chercher</code> de trier tous les types avec <code>modele.titre</code>. Si tu supprimais <code>titre</code> d'une classe, la liste correspondante planterait.</p>
 <hr>
-<h2 id="5-apppy--le-chef-dorchestre">5. <code>app.py</code> : le chef d'orchestre</h2>
+<h2 id="5-apppy--le-chef-dorchestre">5. <span style="color: dodgerblue;">app.py</span> : le chef d'orchestre</h2>
 <h3 id="51-la-configuration">5.1 La configuration</h3>
 <pre class="hljs"><code><div>app = Flask(__name__)
 app.config[<span class="hljs-string">&#x27;SQLALCHEMY_DATABASE_URI&#x27;</span>] = <span class="hljs-string">&#x27;sqlite:///mediatheque.db&#x27;</span>
@@ -619,7 +620,7 @@ db.init_app(app)
 <li><code>{% block contenu %}</code> : le corps de la page.</li>
 </ul>
 <p><code>index.html</code> et <code>liste.html</code> commencent par <code>{% extends 'base.html' %}</code> et ne remplissent que ces deux blocs. L'en-tête, le menu et les messages flash sont donc écrits <strong>une seule fois</strong>.</p>
-<h3 id="62-ce-que-fait-basehtml">6.2 Ce que fait <code>base.html</code></h3>
+<h3 id="62-ce-que-fait-basehtml">6.2 Ce que fait <span style="color: dodgerblue;">base.html</span></h3>
 <ul>
 <li>Charge la police Google Fonts et le fichier CSS, avec <code>url_for('static', filename='css/style.css')</code>.</li>
 <li>Calcule <code>actif</code> : le type de la page en cours (<code>livres</code>, <code>cds</code>, <code>dvds</code>, ou vide sur l'accueil), à partir de <code>request.view_args</code>.</li>
@@ -627,7 +628,7 @@ db.init_app(app)
 <li>Construit le menu avec une boucle sur <code>livres</code>, <code>cds</code> et <code>dvds</code>, et marque le lien actif avec <code>aria-current</code>.</li>
 <li>Affiche les messages <code>flash</code> envoyés par <code>app.py</code>.</li>
 </ul>
-<h3 id="63-ce-que-fait-listehtml">6.3 Ce que fait <code>liste.html</code></h3>
+<h3 id="63-ce-que-fait-listehtml">6.3 Ce que fait <span style="color: dodgerblue;">liste.html</span></h3>
 <p>Il reçoit de <code>app.py</code> les variables <code>type_</code>, <code>t</code>, <code>elements</code>, <code>element</code> et <code>q</code>.</p>
 <ul>
 <li><strong>Le formulaire est généré par une boucle</strong> sur <code>t.champs</code> : pour chaque champ, le template écrit un <code>&lt;textarea&gt;</code>, un <code>&lt;select&gt;</code> ou un <code>&lt;input&gt;</code> selon son <code>type</code>. Aucun champ n'est écrit à la main.</li>
@@ -640,7 +641,7 @@ db.init_app(app)
 <h3 id="64-le-lien-entre-templates-et-routes">6.4 Le lien entre templates et routes</h3>
 <p>Les noms passés à <code>url_for</code> (<code>accueil</code>, <code>liste</code>, <code>ajouter</code>, <code>modifier</code>, <code>supprimer</code>) sont les <strong>noms des fonctions de <code>app.py</code></strong>. Si tu renommes une fonction de route, il faut mettre à jour tous les templates qui l'utilisent.</p>
 <hr>
-<h2 id="7-stylecss-et-la-couleur-daccent">7. <code>style.css</code> et la couleur d'accent</h2>
+<h2 id="7-stylecss-et-la-couleur-daccent">7. <span style="color: dodgerblue;">style.css</span> et la couleur d'accent</h2>
 <p>Chaque type a sa couleur : vert pour les livres, violet pour les CD, rouge pour les DVD. Voici la chaîne qui l'applique :</p>
 <ol>
 <li>L'URL contient <code>livres</code>, <code>cds</code> ou <code>dvds</code> (<code>app.py</code>, paramètre <code>type_</code>).</li>

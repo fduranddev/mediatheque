@@ -6,13 +6,14 @@
 
 L'application repose sur un principe simple : **chaque fichier a un seul métier**.
 
-- `models.py` décrit les **données** (les tables de la base).
-- `app.py` est le **chef d'orchestre** : il reçoit les requêtes du navigateur, lit ou écrit dans la base, puis choisit la page à afficher.
-- `templates/` contient le **HTML** (avec des trous que Flask remplit).
-- `static/css/style.css` contient l'**apparence**.
-- `instance/mediatheque.db` contient les **données réelles** (le fichier SQLite).
+- <span style="color: royalblue;">models.py</span> décrit les **données** (les tables de la base).
+- <span style="color: royalblue;">app.py</span> est le **chef d'orchestre** : il reçoit les requêtes du navigateur, lit ou écrit dans la base, puis choisit la page à afficher.
+- <span style="color: royalblue;">template/</span> contient le **HTML** (avec des trous que Flask remplit).
+- <span style="color: royalblue;">static/css/style.css</span> contient l'**apparence**.
+- <span style="color: royalblue;">instance/mediatheque.db</span> contient les **données réelles** (le fichier SQLite).
 
-Quand tu cliques sur un lien, le navigateur envoie une URL à `app.py`. Celui-ci interroge la base grâce aux classes de `models.py`, injecte le résultat dans un template, et renvoie une page HTML qui va elle-même chercher le fichier CSS.
+Quand tu cliques sur un lien, le navigateur envoie une URL à <span style="color: royalblue;">app.py</span>. Celui-ci interroge la base grâce aux classes de
+<span style="color: royalblue;">models.py</span>, injecte le résultat dans un template, et renvoie une page HTML qui va elle-même chercher le fichier CSS.
 
 ---
 
@@ -51,7 +52,7 @@ mediatheque/
 
 - `.venv/` (environnement virtuel), `__pycache__/` (cache Python) et `.git/` (historique Git) : générés automatiquement.
 - `me` : un fichier vide, sans doute créé par accident.
-- ```podman run -d ``.txt``` : des notes (OpenSearch, PostgreSQL) sans rapport avec la médiathèque.
+- `podman.txt` : note (PostgreSQL) sans rapport avec la médiathèque.
 
 ---
 
@@ -71,7 +72,7 @@ Retiens cette chaîne : **URL → route (app.py) → modèle (models.py) → bas
 
 ---
 
-## 4. `models.py` : les données
+## 4. <span style="color: dodgerblue;">models.py</span> : les données
 
 ```python
 from flask_sqlalchemy import SQLAlchemy
@@ -94,7 +95,7 @@ class Livre(db.Model):
 
 ---
 
-## 5. `app.py` : le chef d'orchestre
+## 5. <span style="color: dodgerblue;">app.py</span> : le chef d'orchestre
 
 ### 5.1 La configuration
 
@@ -180,7 +181,7 @@ Au démarrage, SQLAlchemy crée les tables qui n'existent pas encore, d'après l
 
 `index.html` et `liste.html` commencent par `{% extends 'base.html' %}` et ne remplissent que ces deux blocs. L'en-tête, le menu et les messages flash sont donc écrits **une seule fois**.
 
-### 6.2 Ce que fait `base.html`
+### 6.2 Ce que fait <span style="color: dodgerblue;">base.html</span>
 
 - Charge la police Google Fonts et le fichier CSS, avec `url_for('static', filename='css/style.css')`.
 - Calcule `actif` : le type de la page en cours (`livres`, `cds`, `dvds`, ou vide sur l'accueil), à partir de `request.view_args`.
@@ -188,7 +189,7 @@ Au démarrage, SQLAlchemy crée les tables qui n'existent pas encore, d'après l
 - Construit le menu avec une boucle sur `livres`, `cds` et `dvds`, et marque le lien actif avec `aria-current`.
 - Affiche les messages `flash` envoyés par `app.py`.
 
-### 6.3 Ce que fait `liste.html`
+### 6.3 Ce que fait <span style="color: dodgerblue;">liste.html</span>
 
 Il reçoit de `app.py` les variables `type_`, `t`, `elements`, `element` et `q`.
 
@@ -205,7 +206,7 @@ Les noms passés à `url_for` (`accueil`, `liste`, `ajouter`, `modifier`, `suppr
 
 ---
 
-## 7. `style.css` et la couleur d'accent
+## 7. <span style="color: dodgerblue;">style.css</span> et la couleur d'accent
 
 Chaque type a sa couleur : vert pour les livres, violet pour les CD, rouge pour les DVD. Voici la chaîne qui l'applique :
 
