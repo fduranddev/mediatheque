@@ -11,3 +11,5 @@ sudo apt install sqlite3 <br>
 sqlite3 livres.db <br>
 .tables <br>
 SELECT * FROM livre; <br>
+
+[mediatheque.html](https://htmlpreview.github.io/?https://github.com/fduranddev/mediatheque/blob/main/mediatheque.html) 
